@@ -46,7 +46,7 @@ class Bilibili:
     def login_by_cookies(self, path):
         with open(path, 'r') as f:
             cookies = {}
-            for line in f.read().split(';')[:-1]:
+            for line in f.read().split(';'):
                 name, value = line.strip().split('=', 1)
                 cookies[name] = value
             cookies = requests.utils.cookiejar_from_dict(cookies, cookiejar=None, overwrite=True)
@@ -121,6 +121,5 @@ class Bilibili:
                     "csrf": self.csrf
                 }
             )
-            print(req)
             if req['code'] == 0 and req['message'] == '0':
                 return req['data']['url']
