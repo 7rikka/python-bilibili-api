@@ -1,3 +1,4 @@
+import base64
 import sys
 import requests
 
@@ -30,6 +31,7 @@ class Bilibili:
                 }
             )
             if login['status'] == 'OK':
+                print(login['cookie'])
                 cookies = {}
                 for line in login['cookie'].split(';')[:-1]:
                     name, value = line.strip().split('=')
@@ -40,6 +42,18 @@ class Bilibili:
                 return True
             else:
                 return login
+
+    def login_by_cookies(self, path):
+        with open(path, 'r') as f:
+            cookies = {}
+            for line in f.read().split(';')[:-1]:
+                name, value = line.strip().split('=', 1)
+                cookies[name] = value
+            cookies = requests.utils.cookiejar_from_dict(cookies, cookiejar=None, overwrite=True)
+            self.session.cookies = cookies
+            self.csrf = self.session.cookies.get('bili_jct')
+            print("Cookies设置成功")
+
     def post(self, url, data, headers=None):
         while True:
             try:
@@ -92,3 +106,21 @@ class Bilibili:
             url='https://member.bilibili.com/x/web/white'
         )
         return req
+
+    def upload_cover(self, path):
+        """
+        上传封面，返回封面url地址
+        :param path: 图片路径
+        :return:
+        """
+        with open(path, 'rb') as f:
+            req = self.post(
+                url='https://member.bilibili.com/x/vu/web/cover/up',
+                data={
+                    "cover": 'data:image/jpeg;base64,' + base64.b64encode(f.read()).decode('utf-8'),
+                    "csrf": self.csrf
+                }
+            )
+            print(req)
+            if req['code'] == 0 and req['message'] == '0':
+                return req['data']['url']
