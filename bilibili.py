@@ -123,3 +123,30 @@ class Bilibili:
             )
             if req['code'] == 0 and req['message'] == '0':
                 return req['data']['url']
+
+    def report(self, cid, dmid, reason, content=None):
+        """
+        举报弹幕
+        :param cid:     弹幕所在cid号
+        :param dmid:    弹幕id号
+        :param reason:  1违法违禁 2色情低俗 3赌博诈骗 4人身攻击 5侵犯隐私
+                        6垃圾广告 7引战 8剧透 9恶意刷屏 10视频无关
+                        11其他(带content) 12青少年不良信息
+        :param content:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/dm/report/add',
+            data={
+                'cid': cid,
+                'dmid': dmid,
+                'reason': reason,
+                'content': '' if content is None else content,
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("code = 0 举报成功")
+        elif req['code'] == 36201:
+            print('code = 36201 弹幕不存在')
+        elif req['code'] == 36204:
+            print('code = 36204 已举报')
