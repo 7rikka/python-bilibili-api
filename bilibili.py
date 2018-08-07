@@ -196,3 +196,25 @@ class Bilibili:
             'archive': req['data']['archive']['view'],
             'article': req['data']['article']['view']
         }
+
+    def pagelist(self, aid):
+        """
+            获得稿件的分p，cid等信息的列表，每条信息封装为一个元组
+            (分p的cid,分p序号,分p标题,持续时间(单位为秒))
+            :param s: session
+            :param aid: 稿件aid，不含av前缀
+            :return:稿件信息列表
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/player/pagelist',
+            params={'aid': aid}
+        )
+        data = req['data']
+        plist = []
+        for d in data:
+            plist.append((d['cid'],
+                          d['page'],
+                          d['part'],
+                          d['duration'])
+                         )
+        return plist
