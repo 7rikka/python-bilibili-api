@@ -178,3 +178,21 @@ class Bilibili:
                     req['data']['no_reprint'],
                     req['data']['copyright']
                     )
+
+    def upstat(self, mid):
+        """
+        获得稿件播放总数和专栏浏览总数,
+        需要带UA访问
+        :param mid:用户mid
+        :return:字典
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/space/upstat',
+            params={'mid': mid},
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                                   'Chrome/67.0.3396.99 Safari/537.36'}
+        )
+        return {
+            'archive': req['data']['archive']['view'],
+            'article': req['data']['article']['view']
+        }
