@@ -150,3 +150,31 @@ class Bilibili:
             print('code = 36201 弹幕不存在')
         elif req['code'] == 36204:
             print('code = 36204 已举报')
+
+    def stat(self, aid):
+        """
+            获得稿件的播放数等信息，返回一个元组
+            [稿件id,播放数，弹幕数，回复，收藏，硬币，分享，点赞，
+            目前排名，历史最高排名，是否禁止转载，稿件类型(自制/转载)]
+            :param aid: 稿件编号，不含av前缀
+            :return: 列表
+            """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/archive/stat',
+            params={'aid': aid}
+        )
+        print(req)
+        if req['code'] == 0:
+            return (req['data']['aid'],
+                    req['data']['view'],
+                    req['data']['danmaku'],
+                    req['data']['reply'],
+                    req['data']['favorite'],
+                    req['data']['coin'],
+                    req['data']['share'],
+                    req['data']['like'],
+                    req['data']['now_rank'],
+                    req['data']['his_rank'],
+                    req['data']['no_reprint'],
+                    req['data']['copyright']
+                    )
