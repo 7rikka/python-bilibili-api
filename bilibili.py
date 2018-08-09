@@ -368,3 +368,30 @@ class Bilibili:
                     followers.append(i['mid'])
                     rel.append((i['mid'], int(vmid), i['mtime']))
         return rel
+
+    def modify(self, fid, act):
+        """
+        关注/取消关注用户
+        (不要短时间大量调用，会封禁一段时间)
+        :param fid: 要进行操作的用户
+        :param act: 进行的操作1.关注 2.取消关注 3.悄悄关注 4.取消悄悄关注 5.加入黑名单 6.移除黑名单
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/relation/modify',
+            data={
+                'fid': fid,
+                'act': act,
+                're_src': '11',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            if act == '1':
+                print('关注用户' + fid + '成功')
+            elif act == '2':
+                print('取消关注用户' + fid + '成功')
+            else:
+                print(req)
+        else:
+            print(req)
