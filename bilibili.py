@@ -411,3 +411,25 @@ class Bilibili:
         for i in data:
             group.append((i['tagid'], i['name'], i['count']))
         return group
+
+    def move_followings_to_group(self,fids,tagids):
+        """
+        将指定用户加入指定关注分组
+        :param fids:
+        :param tagids: 分组id，使用followings_group获取
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/relation/tags/addUsers',
+            data={
+                'fids': fids,
+                'tagids': tagids,
+                'csrf': self.csrf
+            },
+            headers={'Referer': 'https://space.bilibili.com/%s/' % fids}
+        )
+        print(req)
+        if req['code'] == 0:
+            print("将用户%s加入分组成功！" % fids)
+        else:
+            print(req)
