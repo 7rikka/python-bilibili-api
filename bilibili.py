@@ -433,3 +433,24 @@ class Bilibili:
             print("将用户%s加入分组成功！" % fids)
         else:
             print(req)
+
+    def create_followings_group(self,tag):
+        """
+        创建新的关注分组
+        code=0      创建成功
+        code=22106  该分组已经存在
+        :param tag: 分组的名字
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/relation/tag/create',
+            data={
+                'tag': tag,
+                'csrf': self.csrf
+            }
+        )
+        print(req)
+        if req['code'] == 0:
+            print("分组创建成功！分组id为：%s" % req['data']['tagid'])
+        else:
+            print(req)
