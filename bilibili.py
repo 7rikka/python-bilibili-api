@@ -46,7 +46,7 @@ class Bilibili:
     def login_by_cookies(self, path):
         with open(path, 'r') as f:
             cookies = {}
-            for line in f.read().split(';'):
+            for line in f.read().split(';')[:-1]:
                 name, value = line.strip().split('=', 1)
                 cookies[name] = value
             cookies = requests.utils.cookiejar_from_dict(cookies, cookiejar=None, overwrite=True)
@@ -54,24 +54,30 @@ class Bilibili:
             self.csrf = self.session.cookies.get('bili_jct')
             print("Cookies设置成功")
 
-    def post(self, url, data, headers=None):
+    def post(self, url, data, headers=None, params=None):
         while True:
             try:
                 if headers is None:
-                    req = self.session.post(url, data=data, timeout=5)
+                    if params is None:
+                        req = self.session.post(url, data=data, timeout=5)
+                    else:
+                        req = self.session.post(url, data=data, params=params, timeout=5)
                 else:
-                    req = self.session.post(url, data=data, headers=headers, timeout=5)
+                    if params is None:
+                        req = self.session.post(url, data=data, headers=headers, timeout=5)
+                    else:
+                        req = self.session.post(url, data=data, headers=headers, params=params, timeout=5)
                 if req.status_code == 200:
                     try:
                         return req.json()
                     except Exception as e:
-                        print(e)
+                        print("[提示]JSON化失败:"+str(e)+"\n[提示]内容为:"+req.text)
                         return req.text
                 else:
-                    print("状态码不是200！请检查错误\n" + req.text)
+                    print("[提示]状态码为"+str(req.status_code)+"！请检查错误\n[提示]" + req.text)
                     sys.exit(0)
             except Exception as e:
-                print("POST出错\n%s" % str(e))
+                print("[提示]POST出错\n[提示]%s" % str(e))
 
     def get(self, url, params=None, headers=None):
         while True:
@@ -88,14 +94,65 @@ class Bilibili:
                         req = self.session.get(url, params=params, headers=headers, timeout=5)
                 if req.status_code == 200:
                     try:
-                        return req.json()  # 如果得到数据是json格式，返回json对象
-                    except:
-                        return req.text  # 不是json格式，直接返回内容
+                        return req.json()
+                    except Exception as e:
+                        print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
+                        return req.text
                 else:
-                    print("状态码不是200！请检查错误\n" + req.text)
+                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
                     sys.exit(0)
             except Exception as e:
-                print("GET出错\n%s" % str(e))
+                print("[提示]GET出错\n[提示]%s" % str(e))
+
+    def options(self, url, params=None, headers=None):
+        while True:
+            try:
+                if params is None:
+                    if headers is None:
+                        req = self.session.options(url, timeout=5)
+                    else:
+                        req = self.session.options(url, headers=headers, timeout=5)
+                else:
+                    if headers is None:
+                        req = self.session.options(url, params=params, timeout=5)
+                    else:
+                        req = self.session.options(url, params=params, headers=headers, timeout=5)
+                if req.status_code == 200:
+                    try:
+                        return req.json()
+                    except Exception as e:
+                        print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
+                        return req.text
+                else:
+                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
+                    sys.exit(0)
+            except Exception as e:
+                print("[提示]OPTIONS出错\n[提示]%s" % str(e))
+
+    def put(self, url, data, params=None, headers=None):
+        while True:
+            try:
+                if params is None:
+                    if headers is None:
+                        req = self.session.put(url, data=data)
+                    else:
+                        req = self.session.put(url, data=data, headers=headers)
+                else:
+                    if headers is None:
+                        req = self.session.put(url, data=data, params=params)
+                    else:
+                        req = self.session.put(url, data=data, params=params, headers=headers)
+                if req.status_code == 200:
+                    try:
+                        return req.json()
+                    except Exception as e:
+                        print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
+                        return req.text
+                else:
+                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
+                    sys.exit(0)
+            except Exception as e:
+                print("[提示]PUT出错\n[提示]%s" % str(e))
 
     def user_info(self):
         """
