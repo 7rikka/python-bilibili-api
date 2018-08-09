@@ -395,3 +395,19 @@ class Bilibili:
                 print(req)
         else:
             print(req)
+
+    def followings_group(self):
+        """
+        获得当前用户的关注分组
+        (i['tagid'], i['name'], i['count'])
+        (分组id,分组名称,分组内的用户数)
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/relation/tags'
+        )
+        data = req['data']
+        group = []
+        for i in data:
+            group.append((i['tagid'], i['name'], i['count']))
+        return group
