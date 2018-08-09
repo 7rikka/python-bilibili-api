@@ -291,3 +291,46 @@ class Bilibili:
             'show_name': req['data']['show_name'],
             'name': req['data']['name']
         }
+
+    def relation_followings(self, vmid):
+        """
+        获取用户的关注列表，系统限制访问前5页，分页最大为50，倒序正序各获取250条记录，共500条
+        返回元组为(int(vmid), d['mid'], d['mtime'])
+        意为这个用户int(vmid)关注了d['mid']，时间为d['mtime']
+        :param s:
+        :param vmid:
+        :return:
+        """
+        followings = []
+        rel = []
+        for i in range(1, 6):
+            req = self.get(
+                url='https://api.bilibili.com/x/relation/followings',
+                params={
+                    'vmid': vmid,
+                    'pn': str(i),
+                    'ps': '50',
+                    'order': 'desc',
+                }
+            )
+            data = req['data']['list']
+            for d in data:
+                if d['mid'] not in followings:
+                    followings.append(d['mid'])
+                    rel.append((int(vmid), d['mid'], d['mtime']))
+        for i in range(1, 6):
+            req = self.get(
+                url='https://api.bilibili.com/x/relation/followings',
+                params={
+                    'vmid': vmid,
+                    'pn': str(i),
+                    'ps': '50',
+                    'order': 'asc',
+                }
+            )
+            data = req['data']['list']
+            for d in data:
+                if d['mid'] not in followings:
+                    followings.append(d['mid'])
+                    rel.append((int(vmid), d['mid'], d['mtime']))
+        return rel
