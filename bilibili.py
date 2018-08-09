@@ -294,6 +294,7 @@ class Bilibili:
 
     def relation_followings(self, vmid):
         """
+        获取自己的关注列表，最多40页，最多2000条
         获取用户的关注列表，系统限制访问前5页，分页最大为50，倒序正序各获取250条记录，共500条
         返回元组为(int(vmid), d['mid'], d['mtime'])
         意为这个用户int(vmid)关注了d['mid']，时间为d['mtime']
@@ -303,7 +304,7 @@ class Bilibili:
         """
         followings = []
         rel = []
-        for i in range(1, 6):
+        for i in range(1, 41):
             req = self.get(
                 url='https://api.bilibili.com/x/relation/followings',
                 params={
@@ -314,6 +315,8 @@ class Bilibili:
                 }
             )
             data = req['data']['list']
+            if len(data) == 0:
+                break
             for d in data:
                 if d['mid'] not in followings:
                     followings.append(d['mid'])
@@ -333,4 +336,35 @@ class Bilibili:
                 if d['mid'] not in followings:
                     followings.append(d['mid'])
                     rel.append((int(vmid), d['mid'], d['mtime']))
+        return rel
+
+    def relation_followers(self, vmid):
+        """
+        系统限制访问前五页
+        获取用户的粉丝列表，最多5页x50=250条
+        查看自己的粉丝列表，最多1000条，分页50，最多20页
+        返回元组为(i['mid'], int(vmid), i['mtime'])
+        意思为粉丝（i['mid']）关注（这个用户vmid），i['mtime']
+        :param vmid:
+        :return:
+        """
+        followers = []
+        rel = []
+        for i in range(1, 21):
+            req = self.get(
+                url='https://api.bilibili.com/x/relation/followers',
+                params={
+                    'vmid': vmid,
+                    'pn': str(i),
+                    'ps': '50',
+                    'order': 'asc'
+                }
+            )
+            data = req['data']['list']
+            if len(data) == 0:
+                break
+            for i in data:
+                if i['mid'] not in followers:
+                    followers.append(i['mid'])
+                    rel.append((i['mid'], int(vmid), i['mtime']))
         return rel
