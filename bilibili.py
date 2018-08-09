@@ -275,3 +275,19 @@ class Bilibili:
                           d['duration'])
                          )
         return plist
+
+    def search_default(self):
+        """
+        获取搜索框的默认关键字
+        :return:dict
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/search/default'
+        )
+        return {
+            'type': req['data']['type'],
+            'seid': req['data']['seid'],
+            'id': req['data']['id'],
+            'show_name': req['data']['show_name'],
+            'name': req['data']['name']
+        }
