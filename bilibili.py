@@ -702,6 +702,18 @@ class Bilibili:
             params={'platform': 'bilihelper'}
         )
         return req
+
+    def get_tag_info(self, tag_id):
+        """
+        通过tag_id获得tag信息
+        :param tag_id:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/tag/info',
+            params={'tag_id': tag_id}
+        )
+        print(req)
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
