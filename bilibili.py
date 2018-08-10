@@ -706,3 +706,15 @@ class Bilibili:
             }
         )
         print(req)
+
+    def old_pagelist(self, aid):
+        """
+        旧接口,获得稿件的分p信息,cid信息
+        :param aid: 稿件aid
+        :return:
+        """
+        req = self.get(
+            url='https://www.bilibili.com/widget/getPageList',
+            params={'aid': aid}
+        )
+        print(req)
