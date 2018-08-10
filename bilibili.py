@@ -98,7 +98,7 @@ class Bilibili:
                         return req.json()
                     except Exception as e:
                         print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
-                        return req.text
+                        return req.content.decode('utf-8')
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
                     sys.exit(0)
@@ -539,9 +539,9 @@ class Bilibili:
         code=22105      请先公开关注后再添加分组(关注后才能复制到分组)
         code=-101       账号未登录
         code=-400       请求错误
-        :param beforeTagids: 移动前所在分组id
-        :param afterTagids:  目标分组id
-        :param fids: 需要操作的用户id列表（list类型），示例[1234,5678,9012]
+        :param beforeTagids:    移动前所在分组id
+        :param afterTagids:     目标分组id
+        :param fids:            需要操作的用户id列表（list类型），示例[1234,5678,9012]
         :return:
         """
         req = self.post(
@@ -635,7 +635,7 @@ class Bilibili:
         获得用户音频作品列表
         :param mid:         用户mid
         :param page:        页数,默认为1
-        :param pagesplit:   分页大小,默认30
+        :param pagesplit:   分页大小,默认30,最大为(?)
         :param order:       排序方式 1.最新发布 2.最多播放 3.最多收藏
         :return:
         """
@@ -650,3 +650,43 @@ class Bilibili:
             }
         )
         return req['data']['data']
+
+    def get_history_danmaku_index(self, cid, month):
+        """
+        获得指定月份可用历史弹幕的列表(需要登录)
+        返回示例：{"code":0,"message":"0","ttl":1,"data":["2018-08-05","2018-08-09","2018-08-10"]}
+        :param cid: 视频cid号
+        :param month: 以年-月组合的字符串，用于查询当月可用的历史弹幕,例:2018-08
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/v2/dm/history/index',
+            params={
+                'type': 1,  # 谜
+                'oid': cid,
+                'month': month
+            }
+        )
+        if req['code'] == 0:
+            return req['data']
+        else:
+            print(req)
+
+        dlist=req
+
+    def get_history_danmaku(self, cid, data):
+        """
+        获得指定时间的历史弹幕
+        :param cid:     视频cid
+        :param data:    指定日期,通过get_history_danmaku_index获取
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/v2/dm/history',
+            params={
+                'type': 1,  # 谜
+                'oid': cid,
+                'date': data
+            }
+        )
+        return req
