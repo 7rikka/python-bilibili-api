@@ -480,3 +480,24 @@ class Bilibili:
             print("分组id:%s已经更名为:%s" % (tagid, name))
         else:
             print(req)
+
+    def followings_group_delete(self, tagid):
+        """
+        删除指定的关注分组
+        code=0      操作成功（删除不存在的分组也返回code0）
+        code=-101   账号未登录
+        :param tagid: 关注分组id
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/relation/tag/del',
+            data={
+                'tagid': tagid,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] ==0:
+            print("操作成功")
+        else:
+            print(req)
