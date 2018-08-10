@@ -416,7 +416,8 @@ class Bilibili:
         """
         将指定用户加入指定关注分组
         :param fids:
-        :param tagids: 分组id，使用followings_group获取
+        :param tagids: 分组id，使用followings_group获取，允许传入多个值，
+        用逗号分开。例：-10,74801
         :return:
         """
         req = self.post(
@@ -434,7 +435,7 @@ class Bilibili:
         else:
             print(req)
 
-    def create_followings_group(self,tag):
+    def followings_group_create(self, tag):
         """
         创建新的关注分组
         code=0      创建成功
@@ -452,5 +453,30 @@ class Bilibili:
         print(req)
         if req['code'] == 0:
             print("分组创建成功！分组id为：%s" % req['data']['tagid'])
+        else:
+            print(req)
+
+    def followings_group_rename(self, tagid, name):
+        """
+        重命名关注分组
+        code=0      修改成功
+        code=22104  该分组不存在
+        code=-101   账号未登录
+        :param tagid:
+        :param name:
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/relation/tag/update',
+            data={
+                'tagid': tagid,
+                'name': name,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        print(req)
+        if req['code'] == 0:
+            print("分组id:%s已经更名为:%s" % (tagid, name))
         else:
             print(req)
