@@ -511,16 +511,44 @@ class Bilibili:
         code=22104      该分组不存在
         code=22105      请先公开关注后再添加分组(关注后才能复制到分组)
         code=-101       账号未登录
+        code=-400   请求错误
         :param fids:    用户列表（list类型），示例[1234,5678,9012]
         :param tagids:  分组id
         :return:
         """
-        print(str(fids)[1:-1])
         req = self.post(
             url='https://api.bilibili.com/x/relation/tags/copyUsers',
             data={
                 'fids': str(fids)[1:-1].replace(' ', ''),
                 'tagids': tagids,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("操作成功")
+        else:
+            print(req)
+
+    def followings_group_move_users(self,beforeTagids,afterTagids,fids):
+        """
+        将多个用户移动到指定的关注分组
+        code=0          操作成功
+        code=22104      该分组不存在
+        code=22105      请先公开关注后再添加分组(关注后才能复制到分组)
+        code=-101       账号未登录
+        code=-400       请求错误
+        :param beforeTagids: 移动前所在分组id
+        :param afterTagids:  目标分组id
+        :param fids: 需要操作的用户id列表（list类型），示例[1234,5678,9012]
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/relation/tags/moveUsers',
+            data={
+                'beforeTagids': beforeTagids,
+                'afterTagids': afterTagids,
+                'fids': str(fids)[1:-1].replace(' ', ''),
                 'jsonp': 'jsonp',
                 'csrf': self.csrf
             }
