@@ -690,3 +690,19 @@ class Bilibili:
             }
         )
         return req
+
+    def old_view(self, avnum):
+        """
+        旧接口,获得稿件信息
+        :param avnum:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/view',
+            params={
+                'type': 'jsonp',
+                'appkey': '8e9fc618fbd41e28',
+                'id': avnum
+            }
+        )
+        print(req)
