@@ -629,3 +629,24 @@ class Bilibili:
             }
         )
         return req['data']['articles']
+
+    def get_user_audio_list(self, mid, page=1, pagesplit=30, order=1):
+        """
+        获得用户音频作品列表
+        :param mid:         用户mid
+        :param page:        页数,默认为1
+        :param pagesplit:   分页大小,默认30
+        :param order:       排序方式 1.最新发布 2.最多播放 3.最多收藏
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/audio/music-service-c/web/song/upper',
+            params={
+                'uid': mid,
+                'pn': page,
+                'ps': pagesplit,
+                'order': order,
+                'jsonp': 'jsonp'
+            }
+        )
+        return req['data']['data']
