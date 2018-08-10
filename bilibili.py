@@ -691,6 +691,17 @@ class Bilibili:
         )
         return req
 
+    def get_danmaku(self, cid):
+        """
+        通过cid获取弹幕
+        :param cid: 视频cid
+        :return:
+        """
+        req = self.get(
+            url='https://comment.bilibili.com/%s.xml' % cid,
+            params={'platform': 'bilihelper'}
+        )
+        return req
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
