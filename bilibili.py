@@ -94,6 +94,7 @@ class Bilibili:
                         req = self.session.get(url, params=params, headers=headers, timeout=5)
                 if req.status_code == 200:
                     try:
+                        print(req.text)
                         return req.json()
                     except Exception as e:
                         print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
@@ -530,7 +531,7 @@ class Bilibili:
         else:
             print(req)
 
-    def followings_group_move_users(self,beforeTagids,afterTagids,fids):
+    def followings_group_move_users(self, beforeTagids, afterTagids, fids):
         """
         将多个用户移动到指定的关注分组
         code=0          操作成功
@@ -557,3 +558,27 @@ class Bilibili:
             print("操作成功")
         else:
             print(req)
+
+    def getSubmitVideos(self, mid, pagesize=100, tid=0, page=1, keyword='', order='pubdate'):
+        """
+        获得用户投稿的视频列表
+        :param mid:         用户mid
+        :param pagesize:    分页大小,默认100,最大100
+        :param tid:         按分区查询,0.查询所有,tid对照见tid.txt
+        :param page:        查询页数,默认查询第一页
+        :param keyword:     按关键字查找
+        :param order:       查询排序方式,默认pubdate(最新发布)/click(点击数)/stow(最多收藏)
+        :return:
+        """
+        req = self.get(
+            url='https://space.bilibili.com/ajax/member/getSubmitVideos',
+            params={
+                'mid': mid,
+                'pagesize': pagesize,
+                'tid': tid,
+                'page': page,
+                'keyword': '',
+                'order': order
+            }
+        )
+        return req['data']['vlist']
