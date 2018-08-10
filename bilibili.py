@@ -577,8 +577,34 @@ class Bilibili:
                 'pagesize': pagesize,
                 'tid': tid,
                 'page': page,
-                'keyword': '',
+                'keyword': keyword,
                 'order': order
             }
         )
         return req['data']['vlist']
+
+    def get_album_list(self, mid, page_num=0, page_size=99999, biz='all'):
+        """
+        获得用户相簿列表
+        :param mid: 用户mid
+        :param page_num: 页数,从0开始,默认为0
+        :param page_size: 分页大小,目前没有限制(WHAT?)
+        :param biz: 分类查找,默认all,draw(画友),daily(日常),photo(摄影)
+        :return:
+        """
+        req = self.get(
+            url='https://api.vc.bilibili.com/link_draw/v1/doc/doc_list',
+            params={
+                'uid': mid,
+                'page_num': page_num,
+                'page_size': page_size,
+                'biz': biz
+            }
+
+        )
+        print(req)
+        l=req['data']['items']
+        print(l)
+        print(len(l))
+        for i in l:
+            print(i)
