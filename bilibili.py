@@ -608,3 +608,24 @@ class Bilibili:
         print(len(l))
         for i in l:
             print(i)
+
+    def get_user_article_list(self, mid, page=1, pagesplit=30, sort='publish_time'):
+        """
+        获得用户专栏文章列表
+        :param mid: 用户mid
+        :param page: 页数,默认第1页
+        :param pagesplit: 分页大小,默认12,最大30
+        :param sort: 排序方式,默认publish_time(发布时间)/view(最多观看)/fav(最多收藏)
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/space/article',
+            params={
+                'mid': mid,
+                'pn': page,
+                'ps': pagesplit,
+                'sort': sort,
+                'jsonp': 'jsonp'
+            }
+        )
+        return req['data']['articles']
