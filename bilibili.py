@@ -751,7 +751,7 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']['news']['archives']
 
-    def get_user_follow_bangumi(self, mid, page=1):
+    def get_user_following_bangumi(self, mid, page=1):
         """
         获得用户订阅的番剧
         :param mid: 用户mid
@@ -770,6 +770,19 @@ class Bilibili:
             for b in req['data']['result']:
                 blist.append(b['season_id'])
             return blist
+
+    def get_user_following_tags(self, mid):
+        """
+        获得用户关注的tag
+        :param mid:
+        :return:
+        """
+        req = self.get(
+            url='https://space.bilibili.com/ajax/tags/getSubList',
+            params={'mid': mid}
+        )
+        if req['status']:
+            return req['data']['tags']
 
     def old_view(self, avnum):
         """
