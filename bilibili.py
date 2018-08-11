@@ -916,6 +916,20 @@ class Bilibili:
                 vlist.append(v['aid'])
             return vlist
 
+    def watchlater_video(self):
+        """
+        获得"稍后观看"中的视频
+        :return: 视频aid列表
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/v2/history/toview/web'
+        )
+        vlist = []
+        if req['code'] == 0:
+            for v in req['data']['list']:
+                vlist.append(v['aid'])
+            return vlist
+
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
