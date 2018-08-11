@@ -888,6 +888,34 @@ class Bilibili:
         if req['code'] == 0:
             print("[提示]频道ID:<{}>已成功删除!".format(ch_id))
 
+    def channel_video(self, mid, cid, page=1, pagesplit=30, order=0):
+        """
+        获得频道内的视频
+        :param mid:
+        :param cid:
+        :param page:
+        :param pagesplit:分页大小,默认30,最大100
+        :param order:0.默认排序 1.倒序排序
+        :return:视频aid列表
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/space/channel/video',
+            params={
+                'mid': mid,
+                'cid': cid,
+                'pn': page,
+                'ps': pagesplit,
+                'order': order,
+                'jsonp': 'jsonp'
+            }
+        )
+        print(req)
+        vlist = []
+        if req['code'] == 0:
+            for v in req['data']['list']['archives']:
+                vlist.append(v['aid'])
+            return vlist
+
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
