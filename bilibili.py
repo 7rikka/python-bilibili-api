@@ -1157,6 +1157,22 @@ class Bilibili:
             av_list = req['data']['av_list']  # 本视频充电排行榜
             list = req['data']['list']  # 本月充电排行榜
             return av_count, count, total_count, av_list, list
+
+    def video_related(self, aid):
+        """
+        获得指定视频的相关视频(看过该视频的还喜欢)
+        :param aid:视频aid
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/archive/related',
+            params={
+                'aid': aid,
+                'jsonp': 'jsonp'
+            }
+        )
+        print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
