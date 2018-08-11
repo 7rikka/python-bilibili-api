@@ -3,6 +3,16 @@ import sys
 import requests
 
 
+class Channel:
+    id = None  # 频道id
+    owner = None  # 所有者mid
+    name = None  # 频道名称
+    intro = None  # 频道介绍
+    ctime = None  # 频道创建时间
+    video_count = None  # 频道中视频的数量
+    cover = None  # 频道封面
+
+
 class Bilibili:
     def __init__(self):
         self.session = requests.session()
@@ -784,6 +794,33 @@ class Bilibili:
         if req['status']:
             return req['data']['tags']
 
+    def get_user_channel_list(self, mid):
+        """
+        获得用户创建的频道列表
+        :param mid: 用户mid
+        :return: Channel对象的list
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/space/channel/list',
+            params={
+                'mid': mid,
+                'guest': 'false',  # 谜,false
+                'jsonp': 'jsonp'
+            }
+        )
+        clist = []
+        if req['code'] == 0:
+            for c in req['data']['list']:
+                channel = Channel()
+                channel.id = c['cid']
+                channel.owner = c['mid']
+                channel.name = c['name']
+                channel.intro = c['intro']
+                channel.ctime = c['mtime']
+                channel.video_count = c['count']
+                channel.cover = c['cover']
+                clist.append(channel)
+            return clist
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
