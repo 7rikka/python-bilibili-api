@@ -1089,6 +1089,20 @@ class Bilibili:
         )
         print(req)
 
+    def get_my_attentions(self):
+        """
+        获得当前用户的关注列表
+        :return: 关注用户mid列表
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/attentions',
+            params={'jsonp': 'jsonp'}
+        )
+        if req['code'] == 0:
+            return req['data']
+
+
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
