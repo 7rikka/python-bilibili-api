@@ -714,6 +714,20 @@ class Bilibili:
             params={'tag_id': tag_id}
         )
         print(req)
+
+    def get_similar_tags(self, tag_id):
+        """
+        获得tag的相关tags
+        :param tag_id:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/tag/change/similar',
+            params={'tag_id': tag_id}
+        )
+        print(req)
+        if req['code'] == 0:
+            return req['data']
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
