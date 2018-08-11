@@ -1134,7 +1134,29 @@ class Bilibili:
             }
         )
         print(req)
-
+        
+    def elec_show(self, aid, mid):
+        """
+        获得指定稿件的充电信息
+        :param aid: 稿件aid
+        :param mid: 作者mid
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/elec/show',
+            params={
+                'jsonp': 'jsonp',
+                'aid': aid,
+                'mid': mid
+            }
+        )
+        if req['code'] == 0:
+            av_count = req['data']['av_count']  # 本视频充电人数
+            count = req['data']['count']  # 本月充电人数
+            total_count = req['data']['total_count']  # 历史充电总人数
+            av_list = req['data']['av_list']  # 本视频充电排行榜
+            list = req['data']['list']  # 本月充电排行榜
+            return av_count, count, total_count, av_list, list
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
