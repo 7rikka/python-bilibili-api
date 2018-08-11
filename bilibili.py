@@ -1173,6 +1173,30 @@ class Bilibili:
         )
         print(req)
 
+    def video_reply(self, aid, page=1, type=1, sort=0):
+        """
+        获得视频的评论
+        code=12002 禁止评论(type>1)
+        code=12009 评论主体的type不合法(type=0)
+        一些特殊的视频也会返回code12002
+        :param aid:视频aid
+        :param page:页数
+        :param type:
+        :param sort:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/v2/reply',
+            params={
+                'jsonp': 'jsonp',
+                'pn': page,
+                'type': type,
+                'oid': aid,
+                'sort': sort  # 0.普通排序 2.按热度排序
+            }
+        )
+        print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
