@@ -43,6 +43,19 @@ class Video:
     access = None           # 观看所需权限
 
 
+class VideoPart:
+    cid = None
+    page = None
+    vfrom = None
+    part = None
+    duration = None
+    vid = None
+    weblink = None
+    width = None
+    height = None
+    rotate = None
+
+
 class Bilibili:
     def __init__(self):
         self.session = requests.session()
@@ -989,8 +1002,24 @@ class Bilibili:
             v.stat_like = req['data']['stat']['like']
             v.stat_dislike = req['data']['stat']['dislike']
             v.dynamic = req['data']['aid']
-            v.cids = None
-            return v
+            cids = []
+            part = []
+            for p in req['data']['pages']:
+                cids.append(p['cid'])
+                vp = VideoPart()
+                vp.cid = p['cid']
+                vp.page = p['page']
+                vp.vfrom = p['from']
+                vp.part = p['part']
+                vp.duration = p['duration']
+                vp.vid = p['vid']
+                vp.weblink = p['weblink']
+                vp.width = p['dimension']['width']
+                vp.height = p['dimension']['height']
+                vp.rotate = p['dimension']['rotate']
+                part.append(vp)
+            v.cids = str(cids)[1:-1].replace(' ', '')
+            return v, part
 
     def watchlater_video(self):
         """
