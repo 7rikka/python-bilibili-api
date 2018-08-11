@@ -44,16 +44,53 @@ class Video:
 
 
 class VideoPart:
-    cid = None
-    page = None
-    vfrom = None
-    part = None
-    duration = None
-    vid = None
-    weblink = None
-    width = None
-    height = None
-    rotate = None
+    cid = None          # 分p的cid
+    page = None         # 分p序号
+    vfrom = None        # 视频来源
+    part = None         # 分p标题
+    duration = None     # 持续时间
+    vid = None          # 不详
+    weblink = None      # 不详
+    width = None        # 视频宽度
+    height = None       # 视频高度
+    rotate = None       # 不详
+
+
+class User:
+    archive_count = None            # 稿件数量
+    article_count = None            # 文章数量
+    follower = None                 # 粉丝数量
+    mid = None                      # 用户ID
+    name = None                     # 用户名称
+    approve = None                  # 不详
+    sex = None                      # 性别
+    rank = None                     # 权限等级
+    face = None                     # 头像
+    DisplayRank = None              # 不详
+    regtime = None                  # 注册时间
+    spacesta = None                 # 账户状态
+    birthday = None                 # 生日
+    place = None                    # 所在地区
+    description = None              # 不详
+    article = None                  # 不详
+    fans = None                     # 粉丝数
+    friend = None                   # 关注数
+    attention = None                # 关注数
+    sign = None                     # 签名
+    current_level = None            # 当前等级
+    pendant_pid = None              # 头像边框ID
+    pendant_expire = None           # 头像边框过期时间
+    nameplate_nid = None            # 勋章ID
+    Official_role = None            # 不详
+    Official_title = None           # 不详
+    Official_desc = None            # 不详
+    official_verify_type = None     # 认证类别0.个人认证
+    official_verify_desc = None     # 认证描述
+    vip_vipType = None              # 大会员类型
+    vip_dueRemark = None            # 不详
+    vip_accessStatus = None         # 不详
+    vip_vipStatus = None            # 大会员状态
+    vip_vipStatusWarn = None        # 不详
 
 
 class Bilibili:
@@ -782,7 +819,7 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']
 
-    def get_tag_video(self,tag_id, page=1, pagesplit=20):
+    def get_tag_video(self, tag_id, page=1, pagesplit=20):
         """
         获得指定tag下的视频,按时间顺序排列
         :param tag_id:
@@ -1020,6 +1057,22 @@ class Bilibili:
                 part.append(vp)
             v.cids = str(cids)[1:-1].replace(' ', '')
             return v, part
+
+    def get_user_card(self, mid,):
+        """
+        获得用户详细的资料卡
+        :param mid: 用户
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/card',
+            params={
+                'jsonp': 'jsonp',
+                'mid': mid,
+                # 'loginid': 'loginid' 非必要参数
+            }
+        )
+        print(req)
 
     def watchlater_video(self):
         """
