@@ -821,6 +821,30 @@ class Bilibili:
                 channel.cover = c['cover']
                 clist.append(channel)
             return clist
+
+    def channel_add(self, ch_name, intro='',):
+        """
+        创建新的频道
+        code=0 创建成功
+        code=53001 频道名字数超过限制啦
+        :param ch_name: 频道名称
+        :param intro: 频道介绍
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/space/channel/add',
+            data={
+                'name': ch_name,
+                'intro': intro,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]频道<%s>创建成功,频道ID为%s" % (ch_name, req['data']['cid']))
+            return req['data']['cid']
+        else:
+            print(req)
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
