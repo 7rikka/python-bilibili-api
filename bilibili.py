@@ -1101,7 +1101,24 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']
 
-
+    def is_favoured(self, aid):
+        """
+        判断当前登录的用户是否收藏指定视频
+        返回示例：{'code': 0, 'message': '0', 'ttl': 1, 'data': {'count': 1, 'favoured': False}}
+        count作用不详
+        :param aid: 视频aid
+        :return: 已收藏返回True 未收藏返回False
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/v2/fav/video/favoured',
+            params={
+                'aid': aid,
+                'jsonp': 'jsonp'
+            }
+        )
+        print(req)
+        if req['code'] == 0:
+            return req['data']['favoured']
 
     def watchlater_video(self):
         """
