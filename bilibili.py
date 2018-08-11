@@ -1074,6 +1074,21 @@ class Bilibili:
         )
         print(req)
 
+    def get_video_tags(self, aid):
+        """
+        获得视频的tag
+        :param aid: 视频aid
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/tag/archive/tags',
+            params={
+                'aid': aid,
+                'jsonp': 'jsonp'
+            }
+        )
+        print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
