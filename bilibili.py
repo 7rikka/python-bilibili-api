@@ -13,6 +13,36 @@ class Channel:
     cover = None  # 频道封面
 
 
+class Video:
+    aid = None              # 视频编号
+    videos = None           # 分p数
+    tid = None              # 所属分区编号
+    copyright = None        # 1.自制 2.搬运
+    pic = None              # 封面
+    title = None            # 标题
+    pubdate = None          # 发布日期
+    ctime = None            # 提交日期
+    description = None      # 简介
+    state = None            # 稿件状态 0.正常 -4.撞车(?)
+    forward = None          # 撞车跳转的目标
+    attribute = None        # (?)不详
+    duration = None         # 持续时间,单位为秒
+    owner_mid = None        # 作者mid
+    stat_view = None        # 播放次数
+    stat_danmaku = None     # 弹幕数
+    stat_reply = None       # 回复数
+    stat_favorite = None    # 收藏数
+    stat_coin = None        # 投币数
+    stat_share = None       # 分享数
+    stat_now_rank = None    # 当前排名
+    stat_his_rank = None    # 历史最高排名
+    stat_like = None        # 点赞数
+    stat_dislike = None     # 踩的次数
+    dynamic = None          # 在动态显示的文本
+    cids = None             # 所有分p的cid
+    access = None           # 观看所需权限
+
+
 class Bilibili:
     def __init__(self):
         self.session = requests.session()
@@ -915,6 +945,52 @@ class Bilibili:
             for v in req['data']['list']['archives']:
                 vlist.append(v['aid'])
             return vlist
+
+    def get_video_info(self, aid):
+        """
+        获得视频详细信息
+        code=0 正常
+        code=62002 稿件不可见(稿件被删除 state为-100)
+        code=-404  啥都木有(稿件下架)
+        :param aid: 视频aid
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/view',
+            params={'aid': aid}
+        )
+        if req['code'] == 0:
+            v = Video()
+            v.aid = req['data']['aid']
+            v.videos = req['data']['videos']
+            v.tid = req['data']['tid']
+            v.copyright = req['data']['copyright']
+            v.pic = req['data']['pic']
+            v.title = req['data']['title']
+            v.pubdate = req['data']['pubdate']
+            v.ctime = req['data']['ctime']
+            v.description = req['data']['desc']
+            v.state = req['data']['state']
+            if req['data']['state'] == -4:
+                v.forward = req['data']['forward']
+            v.attribute = req['data']['attribute']
+            v.duration = req['data']['duration']
+            v.owner_mid = req['data']['owner']['mid']
+            v.stat_view = req['data']['stat']['view']
+            if req['data']['stat']['view'] == -1:
+                v.access = req['data']['access']
+            v.stat_danmaku = req['data']['stat']['danmaku']
+            v.stat_reply = req['data']['stat']['reply']
+            v.stat_favorite = req['data']['stat']['favorite']
+            v.stat_coin = req['data']['stat']['coin']
+            v.stat_share = req['data']['stat']['share']
+            v.stat_now_rank = req['data']['stat']['now_rank']
+            v.stat_his_rank = req['data']['stat']['his_rank']
+            v.stat_like = req['data']['stat']['like']
+            v.stat_dislike = req['data']['stat']['dislike']
+            v.dynamic = req['data']['aid']
+            v.cids = None
+            return v
 
     def watchlater_video(self):
         """
