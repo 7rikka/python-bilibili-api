@@ -728,6 +728,28 @@ class Bilibili:
         print(req)
         if req['code'] == 0:
             return req['data']
+
+    def get_tag_video(self,tag_id, page=1, pagesplit=20):
+        """
+        获得指定tag下的视频,按时间顺序排列
+        :param tag_id:
+        :param page:
+        :param pagesplit: 分页大小,默认20,最大40,但返回数据不一定是40,可能是30~40条数据,不定
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/tag/detail',
+            params={
+                'jsonp': 'jsonp',
+                'pn': page,
+                'ps': pagesplit,
+                'tag_id': tag_id,
+            }
+
+        )
+        # print(req)
+        if req['code'] == 0:
+            return req['data']['news']['archives']
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
