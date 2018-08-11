@@ -845,6 +845,31 @@ class Bilibili:
             return req['data']['cid']
         else:
             print(req)
+
+    def channel_edit(self, ch_id, name, intro=''):
+        """
+        修改频道信息
+        code=0 修改成功
+        code=53001 频道名字数超过限制啦
+        code=-400 请求错误
+        :param ch_id:频道id
+        :param name: 频道新名称
+        :param intro: 频道新简介
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/space/channel/edit',
+            data={
+                'cid': ch_id,
+                'name': name,
+                'intro': intro,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        print(req)
+        if req['code'] == 0:
+            print("[提示]频道ID:<{}>名称已修改为<{}>,简介为:<{}>".format(ch_id, name, intro))
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
