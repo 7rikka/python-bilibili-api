@@ -1120,6 +1120,21 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']['favoured']
 
+    def coi(self, aid):
+        """
+        (谜)关于硬币的api
+        :param aid:视频aid
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/archive/coins',
+            params={
+                'jsonp': 'jsonp',
+                'aid': aid
+            }
+        )
+        print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
