@@ -1197,6 +1197,25 @@ class Bilibili:
         )
         print(req)
 
+    def video_tag_log(self, aid, page=1, pagesplit=20):
+        """
+        获得视频标签修改记录
+        :param aid:
+        :param page:
+        :param pagesplit:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/tag/archive/log',
+            params={
+                'aid': aid,
+                'pn': page,
+                'ps': pagesplit,
+                'jsonp': 'jsonp'
+            }
+        )
+        print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
