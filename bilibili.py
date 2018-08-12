@@ -693,7 +693,7 @@ class Bilibili:
 
         )
         print(req)
-        l=req['data']['items']
+        l = req['data']['items']
         print(l)
         print(len(l))
         for i in l:
@@ -762,7 +762,6 @@ class Bilibili:
         else:
             print(req)
 
-        dlist=req
 
     def get_history_danmaku(self, cid, data):
         """
@@ -1638,6 +1637,18 @@ class Bilibili:
             return req['data']['records']
         else:
             print(req)
+
+    def getme_my_basic_info(self):
+        """
+        获得此账号的基本信息(个人中心-我的信息)
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/member/web/account',
+
+        )
+        if req['code'] == 0:
+            return req['data']
 
     def old_view(self, avnum):
         """
