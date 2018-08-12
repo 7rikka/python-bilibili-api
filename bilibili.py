@@ -1234,12 +1234,33 @@ class Bilibili:
                 'csrf': self.csrf
             }
         )
-        print(req)
         if req['code'] == 0:
             print("[提示]TAG:<{}>添加成功!".format(tag_name))
         elif req['code'] == 16009:
             print("[提示]TAG:<{}>已经添加过了!".format(tag_name))
+        else:
+            print(req)
 
+    def video_tag_like(self, aid, tag_id):
+        """
+        视频tag点赞
+        :param aid:
+        :param tag_id:
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/tag/archive/like2',
+            data={
+                'tag_id': tag_id,
+                'aid': aid,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]视频aid:<{}>的TAG:<{}>点赞成功!".format(aid, tag_id))
+        else:
+            print(req)
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
