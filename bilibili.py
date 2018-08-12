@@ -1610,6 +1610,35 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']['list']
 
+    def get_my_reply_list(self, stime, etime, order, sort, page=1, pagesplit=10):
+        """
+        查询此账号的历史发言
+        :param stime: 查询起始时间戳(秒级)
+        :param etime: 查询终止时间戳(秒级)
+        :param order: 发布时间(ctime)获得的赞(like)
+        :param sort: 倒序(desc) 正序(asc),以赞数查询时,只允许使用倒序查询
+        :param page: 页数
+        :param pagesplit:默认值10,根据查询范围最大值不定(例如查询最近三年的记录,最大值为715,更大的的查询范围,最大值更低,否则返回-500服务器错误)
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/member/web/reply/list',
+            params={
+                # 'mid': 2062761,
+                'stime': stime,
+                'etime': etime,
+                'order': order,
+                'sort': sort,
+                'pn': page,
+                'ps': pagesplit,
+                'jsonp': 'jsonp'
+            }
+        )
+        if req['code'] == 0:
+            return req['data']['records']
+        else:
+            print(req)
+
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
