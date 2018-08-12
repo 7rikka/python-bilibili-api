@@ -1120,7 +1120,7 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']['favoured']
 
-    def coi(self, aid):
+    def archive_coins(self, aid):
         """
         (谜)关于硬币的api
         :param aid:视频aid
@@ -1215,6 +1215,30 @@ class Bilibili:
             }
         )
         print(req)
+
+    def video_tag_add(self, aid, tag_name):
+        """
+        为视频添加tag
+        code=16009 这个频道已经添加过啦~
+        code=-101 账号未登录
+        :param aid: 视频aid
+        :param tag_name: 要添加的tag名称
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/tag/archive/add',
+            data={
+                'aid': aid,
+                'tag_name': tag_name,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        print(req)
+        if req['code'] == 0:
+            print("[提示]TAG:<{}>添加成功!".format(tag_name))
+        elif req['code'] == 16009:
+            print("[提示]TAG:<{}>已经添加过了!".format(tag_name))
 
     def watchlater_video(self):
         """
