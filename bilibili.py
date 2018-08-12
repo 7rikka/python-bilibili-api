@@ -1487,7 +1487,7 @@ class Bilibili:
 
     def update_my_sign(self, newsign):
         """
-        修改我的签名
+        修改我的签名(有时不太好用)
         :param newsign:
         :return:
         """
@@ -1502,7 +1502,19 @@ class Bilibili:
         if req['code'] == 0:
             print("[提示]当前签名已修改为:<{}>".format(newsign))
         else:
+            print(req)
+            print(self.csrf)
             print("[提示]修改签名失败!")
+
+    def site_user_info(self):
+        """
+        获得本账号的绑定情况信息
+        :return:
+        """
+        req = self.get(
+            url='https://passport.bilibili.com/web/site/user/info'
+        )
+        print(req)
 
     def watchlater_video(self):
         """
