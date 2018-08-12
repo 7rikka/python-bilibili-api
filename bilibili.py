@@ -1530,7 +1530,7 @@ class Bilibili:
                 return True
             else:
                 return False
-            
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
@@ -1544,6 +1544,24 @@ class Bilibili:
             for v in req['data']['list']:
                 vlist.append(v['aid'])
             return vlist
+
+    def get_my_blacklist(self, page=1, pagesplit=20):
+        """
+        获得我的黑名单列表
+        :param page:
+        :param pagesplit:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/relation/blacks',
+            params={
+                're_version': 0,
+                'pn': page,
+                'ps': pagesplit,
+                'jsonp': 'jsonp'
+            }
+        )
+        return req['data']['list']
 
     def old_view(self, avnum):
         """
