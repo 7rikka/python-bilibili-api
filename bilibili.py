@@ -1485,6 +1485,25 @@ class Bilibili:
         elif not req['status']:
             print("[提示]个人空间布局设置失败!")
 
+    def update_my_sign(self, newsign):
+        """
+        修改我的签名
+        :param newsign:
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/member/web/sign/update',
+            data={
+                'user_sign': newsign,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]当前签名已修改为:<{}>".format(newsign))
+        else:
+            print("[提示]修改签名失败!")
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
