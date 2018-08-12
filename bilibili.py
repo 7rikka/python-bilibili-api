@@ -1430,9 +1430,9 @@ class Bilibili:
         )
         print(req)
 
-    def space_user_tags_add(self, tags):
+    def space_user_tags_set(self, tags):
         """
-        添加个人标签
+        编辑个人标签
         需要使用space_user_tags获取自己的个人标签,然后加上新增的标签,用逗号隔开,一次性全部提交
         :param tags: 例:标签1,标签2,标签3
         :return:
@@ -1450,6 +1450,40 @@ class Bilibili:
             print("[提示]个人标签设置成功!")
         elif not req['status']:
             print("[提示]个人标签设置失败!")
+
+    def space_index_order(self, index_order):
+        """
+        设置个人主页布局
+        1.我的稿件
+        2.我的收藏夹
+        3.订阅番剧
+        4.订阅标签
+        5.最近投币的视频
+        6.不详
+        7.我的频道
+        8.我的专栏
+        9.我的相簿
+        21.公告
+        22.直播间
+        23.个人资料
+        24.官方活动
+        25.最近玩过的游戏
+        6总是在最后
+        :param index_order:
+        :return:
+        """
+        req = self.post(
+            url='https://space.bilibili.com/ajax/settings/setIndexOrder',
+            data={
+                'index_order': str(index_order)[1:-1].replace(" ", ''),
+                'csrf': self.csrf
+            },
+            headers={'Referer': 'https://space.bilibili.com/'}
+        )
+        if req['status']:
+            print("[提示]个人空间布局设置成功!")
+        elif not req['status']:
+            print("[提示]个人空间布局设置失败!")
 
     def watchlater_video(self):
         """
