@@ -1304,6 +1304,28 @@ class Bilibili:
         )
         print(req)
 
+    def video_tag_report(self, aid, tag_id, reason):
+        """
+        举报视频tag
+        :param aid:
+        :param tag_id:
+        :param reason:必须为四个值之一：内容不相关|敏感信息|恶意攻击|剧透内容
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/tag/archive/report',
+            data={
+                'aid': aid,
+                'tag_id': tag_id,
+                'reason': reason,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]举报视频aid:<{}>中的TAG:<{}>成功,举报理由为:<{}>".format(aid, tag_id, reason))
+        else:
+            print(req)
 
     def watchlater_video(self):
         """
