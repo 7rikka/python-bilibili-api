@@ -1575,7 +1575,7 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']['list']
 
-    def get_my_moral_log(self):
+    def get_my_login_log(self):
         """
         获得此账号最近一周的登录情况
         :return:
@@ -1587,7 +1587,7 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']['list']
 
-    def get_my_(self):
+    def get_my_moral_log(self):
         """
         获得此账号最近一周的节操值记录
         :return:
@@ -1597,6 +1597,18 @@ class Bilibili:
             params={'jsonp': 'jsonp'}
         )
         print(req)
+
+    def get_my_exp_log(self):
+        """
+        获得此账号最近一周的经验变化
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/member/web/exp/log',
+            params={'jsonp': 'jsonp'}
+        )
+        if req['code'] == 0:
+            return req['data']['list']
 
     def old_view(self, avnum):
         """
