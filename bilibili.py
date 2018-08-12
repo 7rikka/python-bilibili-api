@@ -1516,6 +1516,21 @@ class Bilibili:
         )
         print(req)
 
+    def realname_status(self):
+        """
+        查询本账号是否通过了实名认证
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/member/realname/status',
+
+        )
+        if req['code'] == 0:
+            if req['data']['status'] == 1:
+                return True
+            else:
+                return False
+            
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
