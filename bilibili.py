@@ -1418,6 +1418,18 @@ class Bilibili:
         elif not req['status']:
             print("[提示]操作失败!")
 
+    def space_user_tags(self, mids):
+        """
+        获取一个或多个用户的个人标签
+        :param mids:用户mid的list
+        :return:
+        """
+        req = self.get(
+            url='https://space.bilibili.com/ajax/member/getTags',
+            params={'mids': str(mids)[1:-1].replace(" ", '')}
+        )
+        print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
