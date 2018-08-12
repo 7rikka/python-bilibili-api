@@ -1382,13 +1382,41 @@ class Bilibili:
                 'tag_id': tag_id,
                 'csrf': self.csrf
             },
-            headers={'Referer': 'https://space.bilibili.com/2062760/'}
+            headers={'Referer': 'https://space.bilibili.com/'}
         )
         print(req)
         if req['status']:
             print("[提示]取消订阅TAG:<{}>成功".format(tag_id))
         elif not req['status']:
             print("[提示]取消订阅TAG:<{}>失败".format(tag_id))
+
+    def space_pravacy(self, option, value):
+        """
+        个人主页-设置-隐私设置,设置指定项对其他用户是否可见
+        1为可见,0为隐藏,可选项:
+        我的收藏夹           fav_video
+        订阅番剧             bangumi
+        订阅标签             tags
+        最近投币的视频        coins_video
+        个人资料             user_info
+        最近玩过的游戏         played_game
+        :param value: 隐藏or显示
+        :param option: 需要更改的项目
+        :return:
+        """
+        req = self.post(
+            url='https://space.bilibili.com/ajax/settings/setPrivacy',
+            data={
+                option: value,
+                'csrf': self.csrf
+            },
+            headers={'Referer': 'https://space.bilibili.com/'}
+        )
+        print(req)
+        if req['status']:
+            print("[提示]操作成功!")
+        elif not req['status']:
+            print("[提示]操作失败!")
 
     def watchlater_video(self):
         """
