@@ -1430,6 +1430,27 @@ class Bilibili:
         )
         print(req)
 
+    def space_user_tags_add(self, tags):
+        """
+        添加个人标签
+        需要使用space_user_tags获取自己的个人标签,然后加上新增的标签,用逗号隔开,一次性全部提交
+        :param tags: 例:标签1,标签2,标签3
+        :return:
+        """
+        req = self.post(
+            url='https://space.bilibili.com/ajax/member/setTags',
+            data={
+                'tags': tags,
+                'csrf': self.csrf
+            },
+            headers={'Referer': 'https://space.bilibili.com/'}
+        )
+        print(req)
+        if req['status']:
+            print("[提示]个人标签设置成功!")
+        elif not req['status']:
+            print("[提示]个人标签设置失败!")
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
