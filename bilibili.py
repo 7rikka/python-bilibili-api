@@ -1563,6 +1563,18 @@ class Bilibili:
         )
         return req['data']['list']
 
+    def get_my_coin_log(self):
+        """
+        获得此账号硬币最近一周的变化情况
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/member/web/coin/log',
+            params={'jsonp': 'jsonp'}
+        )
+        if req['code'] == 0:
+            return req['data']['list']
+
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
