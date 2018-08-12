@@ -1283,6 +1283,28 @@ class Bilibili:
         else:
             print(req)
 
+    def video_tag_del(self, aid, tag_id):
+        """
+        删除视频的tag
+        code=16011 删除太多频道啦,休息休息~
+        code=16049 资源绑定tag关系不存在~
+        code=16071 只有UP主可以删除哦
+        :param aid:
+        :param tag_id:
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/tag/archive/del',
+            data={
+                'aid': aid,
+                'tag_id': tag_id,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        print(req)
+
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
