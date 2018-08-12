@@ -1243,7 +1243,7 @@ class Bilibili:
 
     def video_tag_like(self, aid, tag_id):
         """
-        视频tag点赞
+        视频tag点赞,再点一次取消赞
         :param aid:
         :param tag_id:
         :return:
@@ -1261,6 +1261,28 @@ class Bilibili:
             print("[提示]视频aid:<{}>的TAG:<{}>点赞成功!".format(aid, tag_id))
         else:
             print(req)
+
+    def video_tag_hate(self, aid, tag_id):
+        """
+        视频tag踩,再点一次取消踩
+        :param aid:
+        :param tag_id:
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/tag/archive/hate2',
+            data={
+                'tag_id': tag_id,
+                'aid': aid,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]视频aid:<{}>的TAG:<{}>踩成功!".format(aid, tag_id))
+        else:
+            print(req)
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
