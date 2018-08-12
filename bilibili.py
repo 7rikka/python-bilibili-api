@@ -1370,6 +1370,26 @@ class Bilibili:
         else:
             print(req)
 
+    def tag_cancelSub(self, tag_id):
+        """
+        取消订阅TAG(通过个人主页-订阅-标签)
+        :param tag_id:
+        :return:
+        """
+        req = self.post(
+            url='https://space.bilibili.com/ajax/tags/cancelSub',
+            data={
+                'tag_id': tag_id,
+                'csrf': self.csrf
+            },
+            headers={'Referer': 'https://space.bilibili.com/2062760/'}
+        )
+        print(req)
+        if req['status']:
+            print("[提示]取消订阅TAG:<{}>成功".format(tag_id))
+        elif not req['status']:
+            print("[提示]取消订阅TAG:<{}>失败".format(tag_id))
+
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
