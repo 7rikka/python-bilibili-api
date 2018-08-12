@@ -1327,6 +1327,25 @@ class Bilibili:
         else:
             print(req)
 
+    def tag_subscribe(self, tag_id):
+        """
+        订阅TAG
+        code=16030 已经订阅过这个频道啦~
+        :param tag_id:
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/tag/subscribe/add',
+            data={
+                'tag_id': tag_id,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]订阅TAG:<{}>成功!".format(tag_id))
+        else:
+            print(req)
     def watchlater_video(self):
         """
         获得"稍后观看"中的视频
