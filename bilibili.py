@@ -1098,6 +1098,18 @@ class Bilibili:
         if req['code'] == 0:
             return req['data']
 
+    def get_attention_list(self):
+        """
+        获得当前用户关注的mid列表，带不带params不影响结果
+        :return:
+        """
+        req = self.get(
+            url='https://api.vc.bilibili.com/feed/v1/feed/get_attention_list'
+            # params={'uid': '3296491'}
+        )
+        if req['code'] == 0 and req['message'] == 'success':
+            return req['data']['list']
+
     def is_favoured(self, aid):
         """
         判断当前登录的用户是否收藏指定视频
