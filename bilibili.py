@@ -1686,6 +1686,27 @@ class Bilibili:
         )
         print(req)
 
+    def report_add(self, mid, reason):
+        """
+        个人信息举报
+        :param mid:
+        :param reason: 1.头像违规 2.昵称违规 3.签名违规 选择多项，用逗号隔开1,2,3
+        :return:
+        """
+        req = self.post(
+            url='https://space.bilibili.com/ajax/report/add',
+            data={
+                'mid': mid,
+                'reason': reason,
+                'csrf': self.csrf
+            },
+            headers={
+                'Referer': 'https://space.bilibili.com/%s/' % mid
+            }
+
+        )
+        print(req)
+
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
