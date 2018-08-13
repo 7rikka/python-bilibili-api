@@ -161,7 +161,7 @@ class Bilibili:
                     try:
                         return req.json()
                     except Exception as e:
-                        print("[提示]JSON化失败:"+str(e)+"\n[提示]内容为:"+req.text)
+                        print("[POST][提示]JSON化失败:"+str(e)+"\n[提示]内容为:"+req.text)
                         return req.text
                 else:
                     print("[提示]状态码为"+str(req.status_code)+"！请检查错误\n[提示]" + req.text)
@@ -187,7 +187,7 @@ class Bilibili:
                         print(req.text)
                         return req.json()
                     except Exception as e:
-                        print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
+                        print("[GET][提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
                         return req.content.decode('utf-8')
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
@@ -212,7 +212,6 @@ class Bilibili:
                     try:
                         return req.json()
                     except Exception as e:
-                        print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
                         return req.text
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
@@ -236,8 +235,7 @@ class Bilibili:
                 if req.status_code == 200:
                     try:
                         return req.json()
-                    except Exception as e:
-                        print("[提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
+                    except:
                         return req.text
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
@@ -1638,7 +1636,7 @@ class Bilibili:
         else:
             print(req)
 
-    def getme_my_basic_info(self):
+    def get_my_basic_info(self):
         """
         获得此账号的基本信息(个人中心-我的信息)
         :return:
@@ -1649,6 +1647,32 @@ class Bilibili:
         )
         if req['code'] == 0:
             return req['data']
+
+    def update_my_basic_info(self, uname, usersign, sex, birthday):
+        """
+        更新此账号的基本资料
+        code=40004 昵称不可包含除-和_以外的特殊字符
+        code=40005 昵称太长或包含特殊字符
+        code=40014 该昵称已存在
+        code=40021 签名不能包含表情图片
+        code=40022 签名最多支持70个字
+        :param uname: 用户名
+        :param usersign: 签名
+        :param sex: 性别,男,女,保密
+        :param birthday:生日,例:2014-12-01
+        :return:
+        """
+        req = self.post(
+            url='https://api.bilibili.com/x/member/web/update',
+            data={
+                'uname': uname,
+                'usersign': usersign,
+                'sex': sex,
+                'birthday': birthday,
+                'csrf': self.csrf
+            }
+        )
+        print(req)
 
     def old_view(self, avnum):
         """
