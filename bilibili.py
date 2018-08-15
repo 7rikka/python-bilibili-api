@@ -209,10 +209,7 @@ class Bilibili:
                     else:
                         req = self.session.options(url, params=params, headers=headers, timeout=5)
                 if req.status_code == 200:
-                    try:
-                        return req.json()
-                    except Exception as e:
-                        return req.text
+                    return True
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
                     sys.exit(0)
@@ -233,10 +230,7 @@ class Bilibili:
                     else:
                         req = self.session.put(url, data=data, params=params, headers=headers)
                 if req.status_code == 200:
-                    try:
-                        return req.json()
-                    except:
-                        return req.text
+                    return True
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
                     sys.exit(0)
@@ -1707,6 +1701,17 @@ class Bilibili:
         )
         print(req)
 
+    def watchlater_video_add(self, aid):
+        req = self.post(
+            url='https://api.bilibili.com/x/v2/history/toview/add',
+            data={
+                'aid': aid,
+                'jsonp': 'jsonp',
+                'csrf': self.csrf
+            }
+        )
+        print(req)
+
     def old_view(self, avnum):
         """
         旧接口,获得稿件信息
@@ -1734,3 +1739,24 @@ class Bilibili:
             params={'aid': aid}
         )
         print(req)
+
+    def submitArticle(self, infodict):
+        """
+        提交稿件
+        :param infodict:稿件信息的dict
+        :return:
+        """
+        req = self.post(
+            url='https://member.bilibili.com/x/vu/web/add',
+            params={
+                'csrf': self.csrf
+            },
+            data=infodict,
+            headers={
+                'Content-Type': 'application/json;charset=UTF-8'
+            }
+        )
+        if req['code'] == 0:
+            print("[提示]稿件提交成功,稿件ID为<{}>".format(req['data']['aid']))
+        else:
+            print("[提示]提交稿件发生错误!返回数据为:"+req)
