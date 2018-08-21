@@ -1,5 +1,9 @@
 import base64
+import json
+import re
 import sys
+import time
+
 import requests
 
 
@@ -136,11 +140,12 @@ class Bilibili:
     def login_by_cookies(self, path):
         with open(path, 'r') as f:
             cookies = {}
-            for line in f.read().split(';')[:-1]:
+            for line in f.read().split(';'):
                 name, value = line.strip().split('=', 1)
                 cookies[name] = value
             cookies = requests.utils.cookiejar_from_dict(cookies, cookiejar=None, overwrite=True)
             self.session.cookies = cookies
+            print(cookies)
             self.csrf = self.session.cookies.get('bili_jct')
             print("Cookies设置成功")
 
@@ -157,6 +162,7 @@ class Bilibili:
                         req = self.session.post(url, data=data, headers=headers, timeout=5)
                     else:
                         req = self.session.post(url, data=data, headers=headers, params=params, timeout=5)
+                        print(req.url)
                 if req.status_code == 200:
                     try:
                         return req.json()
@@ -184,14 +190,15 @@ class Bilibili:
                         req = self.session.get(url, params=params, headers=headers, timeout=5)
                 if req.status_code == 200:
                     try:
-                        print(req.text)
+                        # print(req.text)
                         return req.json()
                     except Exception as e:
-                        print("[GET][提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
+                        # print("[GET][提示]JSON化失败:" + str(e) + "\n[提示]内容为:" + req.text)
                         return req.content.decode('utf-8')
                 else:
                     print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
-                    sys.exit(0)
+                    # sys.exit(0)
+                    time.sleep(1)
             except Exception as e:
                 print("[提示]GET出错\n[提示]%s" % str(e))
 
@@ -201,11 +208,13 @@ class Bilibili:
                 if params is None:
                     if headers is None:
                         req = self.session.options(url, timeout=5)
+                        print()
                     else:
                         req = self.session.options(url, headers=headers, timeout=5)
                 else:
                     if headers is None:
                         req = self.session.options(url, params=params, timeout=5)
+                        print(req.url)
                     else:
                         req = self.session.options(url, params=params, headers=headers, timeout=5)
                 if req.status_code == 200:
@@ -236,6 +245,19 @@ class Bilibili:
                     sys.exit(0)
             except Exception as e:
                 print("[提示]PUT出错\n[提示]%s" % str(e))
+
+    def upload_chunk(self, url, data, params, auth):
+        while True:
+            try:
+                req = self.session.options(url=url)
+                if req.status_code != 200:
+                    raise RuntimeError('OPTIONS返回码不是200')
+                req1=self.session.put(url=url, data=data, params=params, headers={'X-Upos-Auth': auth})
+                if req1.status_code != 200:
+                    raise RuntimeError('OPTIONS返回码不是200')
+                return True
+            except:
+                print("[提示]上传块失败,重试...")
 
     def user_info(self):
         """
@@ -1000,6 +1022,7 @@ class Bilibili:
             url='https://api.bilibili.com/x/web-interface/view',
             params={'aid': aid}
         )
+        print(req)
         if req['code'] == 0:
             v = Video()
             v.aid = req['data']['aid']
@@ -1743,6 +1766,7 @@ class Bilibili:
     def submitArticle(self, infodict):
         """
         提交稿件
+        code=10009 同一个视频，不能短时间同时提交到不同稿件，请先查看稿件列表是否第一次提交的稿件已经存在。如需在另一个稿件包含该视频，请分开上传提交。
         :param infodict:稿件信息的dict
         :return:
         """
@@ -1756,7 +1780,32 @@ class Bilibili:
                 'Content-Type': 'application/json;charset=UTF-8'
             }
         )
+        print(req)
         if req['code'] == 0:
             print("[提示]稿件提交成功,稿件ID为<{}>".format(req['data']['aid']))
         else:
             print("[提示]提交稿件发生错误!返回数据为:"+req)
+
+    def get_bangumi_info(self, md):
+        """
+        获得番剧信息
+        :param md: 番剧编号
+        :return:
+        """
+        req = self.get(
+            url='https://www.bilibili.com/bangumi/media/md{}/'.format(md),
+        )
+        jsdata = re.findall('window.__INITIAL_STATE__=(.*?);\(function\(\)', req)
+        return jsdata[0]
+
+    def s_get_info(self, aid):
+        """
+        只获得稿件的播放,回复,弹幕数等统计信息
+        :param aid:
+        :return:
+        """
+        req = self.get(
+            url='https://api.bilibili.com/x/web-interface/view',
+            params={'aid': aid}
+        )
+        return req['data']['stat']
