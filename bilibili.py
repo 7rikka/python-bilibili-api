@@ -154,14 +154,14 @@ class Bilibili:
             try:
                 if headers is None:
                     if params is None:
-                        req = self.session.post(url, data=data, timeout=5)
+                        req = self.session.post(url, data=data,timeout=99999)
                     else:
-                        req = self.session.post(url, data=data, params=params, timeout=5)
+                        req = self.session.post(url, data=data, params=params,timeout=99999)
                 else:
                     if params is None:
-                        req = self.session.post(url, data=data, headers=headers, timeout=5)
+                        req = self.session.post(url, data=data, headers=headers,timeout=99999)
                     else:
-                        req = self.session.post(url, data=data, headers=headers, params=params, timeout=5)
+                        req = self.session.post(url, data=data, headers=headers, params=params,timeout=99999)
                         print(req.url)
                 if req.status_code == 200:
                     try:
@@ -1809,3 +1809,29 @@ class Bilibili:
             params={'aid': aid}
         )
         return req['data']['stat']
+
+    def get_my_archives(self, page=1, pagesplit=10, type=0):
+        """
+        获得我的投稿列表
+        :param page:
+        :param pagesplit: 分页大小,默认10,最大20
+        :param type: 查询类型0.所有 1.审核中 2.已通过 3.未通过
+        :return:
+        """
+        if type == 1:
+            status = 'is_pubing'
+        elif type == 2:
+            status = 'pubed'
+        elif type == 3:
+            status = 'not_pubed'
+        else:
+            status = 'is_pubing,pubed,not_pubed'
+        req = self.get(
+            url='https://member.bilibili.com/x/web/archives',
+            params={
+                'status': status,
+                'pn': page,
+                'ps': pagesplit
+            }
+        )
+        print(req)
