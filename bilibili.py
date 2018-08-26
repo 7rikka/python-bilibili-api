@@ -1835,3 +1835,16 @@ class Bilibili:
             }
         )
         print(req)
+
+    def getartical(self,aid):
+        """
+        获得稿件数据（编辑稿件）
+        :param aid: av号
+        :param session: session
+        :return:
+        """
+        req = self.get(
+            url='https://member.bilibili.com/x/web/archive/view',
+            params={'aid': aid}
+        )
+        return req
