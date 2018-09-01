@@ -162,7 +162,7 @@ class Bilibili:
                         req = self.session.post(url, data=data, headers=headers,timeout=99999)
                     else:
                         req = self.session.post(url, data=data, headers=headers, params=params,timeout=99999)
-                        print(req.url)
+                        # print(req.url)
                 if req.status_code == 200:
                     try:
                         return req.json()
@@ -1834,7 +1834,7 @@ class Bilibili:
                 'ps': pagesplit
             }
         )
-        print(req)
+        return req['data']['arc_audits']
 
     def getartical(self,aid):
         """
@@ -1848,3 +1848,18 @@ class Bilibili:
             params={'aid': aid}
         )
         return req
+
+    def updateArticle(self, datadict):
+        """
+        提交对稿件的修改
+        :param datadict:
+        :return:
+        """
+        data = str(datadict).replace("'", '"').replace('&amp;', '&').replace("&#39;", "'").encode('utf-8')
+        req = self.post(
+            url='https://member.bilibili.com/x/vu/web/edit',
+            data=data,
+            headers={'Content-Type': 'application/json;charset=UTF-8'},
+            params={'csrf': self.csrf}
+        )
+        print(req)
