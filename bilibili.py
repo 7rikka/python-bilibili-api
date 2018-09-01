@@ -1889,3 +1889,28 @@ class Bilibili:
             params={'show_pinyin': show_pinyin}
         )
         print(req)
+
+    def startLive(self, room_id, area_id):
+        """
+        开始直播,获取推流码
+        :param room_id: 自己直播间id
+        :param area_id: 直播间分区id
+        :return:
+        """
+        req = self.post(
+            url='https://api.live.bilibili.com/room/v1/Room/startLive',
+            data={
+                'room_id': room_id,
+                'platform': 'pc',
+                'area_v2': area_id,
+                'csrf_token': self.csrf
+            }
+        )
+        if req['code'] == 0:
+            rtmp_code = req['data']['rtmp']['addr']+req['data']['rtmp']['code']
+            new_link = req['data']['rtmp']['new_link']
+            print("[提示]开播成功,获得推流地址:{}".format(rtmp_code))
+            print("[提示]开播成功,获得new_link:{}".format(new_link))
+            return rtmp_code
+        else:
+            print("[提示]开播出现问题!code={},message={}".format(req['code'],req['message']))
