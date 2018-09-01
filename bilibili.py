@@ -1914,3 +1914,24 @@ class Bilibili:
             return rtmp_code
         else:
             print("[提示]开播出现问题!code={},message={}".format(req['code'],req['message']))
+
+    def stopLive(self, room_id):
+        """
+        关闭我的直播
+        :param room_id: 直播间id
+        :return:
+        """
+        req = self.post(
+            url='https://api.live.bilibili.com/room/v1/Room/stopLive',
+            data={
+                'room_id': room_id,
+                'platform': 'pc',
+                'csrf_token': self.csrf
+            }
+        )
+        if req['code'] == 0 and req['message'] == '' and req['data']['change'] == 1:
+            print("[提示]关播成功!")
+        elif req['code'] == 0 and req['message'] == '重复关播' and req['data']['change'] == 0:
+            print("[提示]重复关播!请勿重复提交关播请求!")
+        else:
+            print(req)
