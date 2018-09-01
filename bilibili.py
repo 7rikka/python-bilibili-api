@@ -1863,3 +1863,17 @@ class Bilibili:
             params={'csrf': self.csrf}
         )
         print(req)
+
+    def getmychhose(self, mid):
+        """
+        查询我的直播间最近使用过的分类
+        :param mid:直播间id
+        :return:
+        """
+        req = self.get(
+            url='https://api.live.bilibili.com/room/v1/Area/getMyChooseArea',
+            params={'roomid':mid}
+        )
+        print(req)
+        if req['code'] == 0:
+            return req['data']
