@@ -1864,7 +1864,7 @@ class Bilibili:
         )
         print(req)
 
-    def getmychhose(self, mid):
+    def getMyChooseArea(self, mid):
         """
         查询我的直播间最近使用过的分类
         :param mid:直播间id
@@ -1877,3 +1877,15 @@ class Bilibili:
         print(req)
         if req['code'] == 0:
             return req['data']
+
+    def getLiveAreaList(self, show_pinyin=1):
+        """
+        获得直播分类信息
+        :param show_pinyin:
+        :return:
+        """
+        req = self.get(
+            url='https://api.live.bilibili.com/room/v1/Area/getList',
+            params={'show_pinyin': show_pinyin}
+        )
+        print(req)
