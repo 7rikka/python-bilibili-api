@@ -149,6 +149,17 @@ class Bilibili:
             self.csrf = self.session.cookies.get('bili_jct')
             print("Cookies设置成功")
 
+    def isLogin(self):
+        req = self.get('https://api.vc.bilibili.com/feed/v1/feed/get_attention_list')
+        code = req['code']
+        if code == 0:
+            print("[提示]登录成功！")
+            return True
+        else:
+            print("[提示]cookies失效！")
+            print("[提示]登录返回信息为：" + req)
+            sys.exit(1)
+
     def post(self, url, data, headers=None, params=None):
         while True:
             try:
@@ -220,8 +231,8 @@ class Bilibili:
                 if req.status_code == 200:
                     return True
                 else:
-                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
-                    sys.exit(0)
+                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.content.decode('utf-8'))
+                    # sys.exit(0)
             except Exception as e:
                 print("[提示]OPTIONS出错\n[提示]%s" % str(e))
 
@@ -241,8 +252,8 @@ class Bilibili:
                 if req.status_code == 200:
                     return True
                 else:
-                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.text)
-                    sys.exit(0)
+                    print("[提示]状态码为" + str(req.status_code) + "！请检查错误\n[提示]" + req.content.decode('utf-8'))
+                    # sys.exit(0)
             except Exception as e:
                 print("[提示]PUT出错\n[提示]%s" % str(e))
 
@@ -1780,9 +1791,9 @@ class Bilibili:
                 'Content-Type': 'application/json;charset=UTF-8'
             }
         )
-        print(req)
         if req['code'] == 0:
             print("[提示]稿件提交成功,稿件ID为<{}>".format(req['data']['aid']))
+            return req['data']['aid']
         else:
             print("[提示]提交稿件发生错误!返回数据为:"+req)
 
