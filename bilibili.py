@@ -157,7 +157,7 @@ class Bilibili:
             return True
         else:
             print("[提示]cookies失效！")
-            print("[提示]登录返回信息为：" + req)
+            print("[提示]登录返回信息为：" + str(req))
             sys.exit(1)
 
     def post(self, url, data, headers=None, params=None):
@@ -318,11 +318,15 @@ class Bilibili:
             }
         )
         if req['code'] == 0:
-            print("code = 0 举报成功")
-        elif req['code'] == 36201:
-            print('code = 36201 弹幕不存在')
-        elif req['code'] == 36204:
-            print('code = 36204 已举报')
+            return True
+        else:
+            print(req)
+            return False
+            # print("code = 0 举报成功")
+        # elif req['code'] == 36201:
+        #     # print('code = 36201 弹幕不存在')
+        # elif req['code'] == 36204:
+            # print('code = 36204 已举报')
 
     def stat(self, aid):
         """
@@ -1081,7 +1085,9 @@ class Bilibili:
                 vp.rotate = p['dimension']['rotate']
                 part.append(vp)
             v.cids = str(cids)[1:-1].replace(' ', '')
-            return v, part
+            return v, part,req['code']
+        else:
+            return None,None,req['code']
 
     def get_user_card(self, mid,):
         """
@@ -1946,3 +1952,31 @@ class Bilibili:
             print("[提示]重复关播!请勿重复提交关播请求!")
         else:
             print(req)
+
+    def getRoomInfoOld(self, mid):
+        """
+        获得指定用户的直播间信息
+        :param mid:
+        :return:
+        """
+        req = self.get(
+            url='https://api.live.bilibili.com/room/v1/Room/getRoomInfoOld',
+            params={
+                'mid': mid
+            }
+        )
+        if req['code'] == 0 and req['msg'] == 'ok' and req['message'] == 'ok':
+            data = req['data']
+            print("[提示]直播间状态:{}".format(data['roomStatus']))
+            print("[提示]轮播状态:{}".format(data['roundStatus']))
+            print("[提示]直播状态:{}".format(data['liveStatus']))
+            print("[提示]直播间地址:{}".format(data['url']))
+            print("[提示]直播间标题:{}".format(data['title']))
+            print("[提示]直播间封面:{}".format(data['cover']))
+            print("[提示]在线人数:{}".format(data['online']))
+            print("[提示]房间ID:{}".format(data['roomid']))
+            print("[提示]直播方式:{}".format(data['broadcast_type']))
+            return True
+        else:
+            print("[提示]发生错误!返回信息为"+req)
+            return False
